@@ -12,5 +12,14 @@ export function PickerItem({ moedas, moedaSelecionada, onChange }: props) {
     return <Picker.Item value={item.key} key={index} label={item.key} />;
   });
 
-  return <Picker>{moedasItem}</Picker>;
+  return (
+    <Picker
+      selectedValue={moedaSelecionada}
+      onValueChange={(value) => {
+        onChange(value);
+      }}
+    >
+      {moedasItem}
+    </Picker>
+  );
 }

@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { PickerItem } from "./src/components/Picker";
 import { useEffect, useState } from "react";
 import { api } from "./src/services/api";
@@ -51,12 +58,25 @@ export default function App() {
         <PickerItem
           moedas={moedas!}
           moedaSelecionada={moedaSelecionada}
-          onChange={(moeda: string) => {
-            setMoedaSelecionada(moeda);
-            console.log(moeda);
-          }}
+          onChange={(moeda: string) => setMoedaSelecionada(moeda)}
         />
       </View>
+
+      <View style={styles.areaValor}>
+        <Text style={styles.titulo}>
+          Digite um valor para converter em Real
+        </Text>
+
+        <TextInput
+          keyboardType="numeric"
+          placeholder="Exemplo"
+          style={styles.input}
+        />
+      </View>
+
+      <TouchableOpacity style={styles.btnArea}>
+        <Text style={styles.btnText}>Converter</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -74,6 +94,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     padding: 8,
+    marginBottom: 1,
   },
   titulo: {
     fontSize: 16,
@@ -81,5 +102,30 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     paddingLeft: 5,
     paddingTop: 5,
+  },
+  areaValor: {
+    width: "90%",
+    backgroundColor: "#f9f9f9",
+    padding: 8,
+  },
+  input: {
+    width: "100%",
+    padding: 8,
+    fontSize: 18,
+    color: "#000",
+  },
+  btnArea: {
+    width: "90%",
+    backgroundColor: "#fb4b57",
+    height: 45,
+    alignItems: "center",
+    justifyContent: "center",
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  btnText: {
+    color: "#000",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
