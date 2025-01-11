@@ -4,15 +4,18 @@ import { PickerItem } from "./src/components/Picker";
 import { useEffect, useState } from "react";
 import { api } from "./src/services/api";
 
+type moeda = { key: string; value: string; label: string };
+
 export default function App() {
-  const [moedas, setMoedas] = useState([{}]);
   const [loading, setLoading] = useState(true);
+  const [moedas, setMoedas] = useState<moeda[]>();
+  const [moedaSelecionada, setMoedaSelecionada] = useState("");
 
   useEffect(() => {
     async function loadMoedas() {
       const response = await api.get("all");
 
-      let arrayMoedas: Array<object> = [];
+      let arrayMoedas: moeda[] = [];
 
       Object.keys(response.data).map((key) => {
         arrayMoedas.push({
@@ -24,6 +27,7 @@ export default function App() {
 
       setMoedas(arrayMoedas);
       setLoading(false);
+      setMoedaSelecionada(arrayMoedas[0].key);
     }
 
     loadMoedas();
@@ -44,7 +48,14 @@ export default function App() {
       <View style={styles.areaMoeda}>
         <Text style={styles.titulo}>Selecione sua moeda</Text>
 
-        <PickerItem />
+        <PickerItem
+          moedas={moedas!}
+          moedaSelecionada={moedaSelecionada}
+          onChange={(moeda: string) => {
+            setMoedaSelecionada(moeda);
+            console.log(moeda);
+          }}
+        />
       </View>
     </View>
   );
