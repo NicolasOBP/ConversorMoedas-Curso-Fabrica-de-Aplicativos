@@ -1,9 +1,20 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import { useEffect } from "react";
 import { PickerItem } from "./src/components/Picker";
+import { useEffect } from "react";
+import { api } from "./src/services/api";
 
 export default function App() {
+  useEffect(() => {
+    async function loadMoedas() {
+      const response = await api.get("all");
+
+      let arrayMoedas;
+    }
+
+    loadMoedas();
+  }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
