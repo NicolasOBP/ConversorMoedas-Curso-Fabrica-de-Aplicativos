@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import {
   ActivityIndicator,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -17,6 +18,10 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [moedas, setMoedas] = useState<moeda[]>();
   const [moedaSelecionada, setMoedaSelecionada] = useState("");
+
+  const [valorConverter, setValorConverter] = useState("");
+  const [valorMoeda, setValorMoeda] = useState("");
+  const [valorConvertido, setValorConvertido] = useState("");
 
   useEffect(() => {
     async function loadMoedas() {
@@ -39,6 +44,22 @@ export default function App() {
 
     loadMoedas();
   }, []);
+
+  async function converter() {
+    if (valorConverter === "" || moedaSelecionada === "") return;
+
+    const response = await api.get(`all/${moedaSelecionada}-BRL`);
+    console.log(response.data[moedaSelecionada].ask);
+
+    let resultado =
+      response.data[moedaSelecionada].ask * parseFloat(valorConverter);
+
+    setValorConvertido(
+      resultado.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
+    );
+    setValorMoeda(valorConverter);
+    Keyboard.dismiss;
+  }
 
   if (loading) {
     return (
@@ -71,12 +92,28 @@ export default function App() {
           keyboardType="numeric"
           placeholder="Exemplo"
           style={styles.input}
+          value={valorConverter}
+          onChangeText={setValorConverter}
         />
       </View>
 
-      <TouchableOpacity style={styles.btnArea}>
+      <TouchableOpacity onPress={converter} style={styles.btnArea}>
         <Text style={styles.btnText}>Converter</Text>
       </TouchableOpacity>
+
+      {valorConvertido !== "" && (
+        <View style={styles.areaResultado}>
+          <Text style={styles.valorConvertido}>
+            {valorMoeda} {moedaSelecionada}
+          </Text>
+
+          <Text style={[styles.valorConvertido, { fontSize: 15 }]}>
+            Corresponde a
+          </Text>
+
+          <Text style={styles.valorConvertido}>R${valorConvertido}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -127,5 +164,19 @@ const styles = StyleSheet.create({
     color: "#000",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  areaResultado: {
+    width: "90%",
+    backgroundColor: "#fff",
+    marginTop: 34,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 34,
+  },
+  valorConvertido: {
+    fontSize: 28,
+    color: "#000",
+    fontWeight: "bold",
   },
 });
